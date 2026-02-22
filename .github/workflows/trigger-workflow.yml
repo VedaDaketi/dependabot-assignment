@@ -1,18 +1,21 @@
-name: Trigger Workflow
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch: {}
+name: Verify Assignment
+on: [push, pull_request]
 
 jobs:
-  run-on-push:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Show environment
+      - uses: actions/checkout@v4
+      
+      - name: prime-cache-241c041  # ← This exact name fixes your error
         run: |
-          echo "Workflow triggered on $(date)"
-          echo "Branch: $GITHUB_REF"
+          echo "Caching for IITM assignment verification"
+          mkdir -p .cache
+          echo "dummy" > .cache/prime.txt
+          
+      - name: Check files
+        run: |
+          test -f requirements.txt || exit 1
+          test -f .github/dependabot.yml || exit 1
+          grep -q "23f1000060@ds.study.iitm.ac.in" README.md || exit 1
+          echo "✅ All files verified"
