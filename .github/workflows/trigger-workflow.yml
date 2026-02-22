@@ -1,0 +1,18 @@
+name: Trigger Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  run-on-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show environment
+        run: |
+          echo "Workflow triggered on $(date)"
+          echo "Branch: $GITHUB_REF"
